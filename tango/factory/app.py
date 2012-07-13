@@ -183,5 +183,6 @@ def build_app(import_name, import_stash=False, use_snapshot=True,
         for route in app.routes:
             app.build_view(route)
 
-    app.context_processor(lambda: request.view_args)
+    app.context_processor(lambda: request.view_args
+                          if request.view_args else {})
     return app
