@@ -15,7 +15,7 @@ __all__ = ['abort', 'errors', 'request', 'session', 'app', 'build', 'config',
            '__codename__', '__fullversion__', '__label__']
 
 
-# Keep this codename up-to-date; it's useful in common language.
+# The release codename, update on each major release.
 __codename__ = 'Salida'
 
 
@@ -26,11 +26,12 @@ __email__ = "ron.duplain@willowtreeapps.com"
 
 # Append yourself to author, chronological order.
 # Add yourself to credits, alphabetical by first name.
-__author__ = 'Ron DuPlain and Matt Dawson'
-__copyright__ = 'Copyright 2010-2011, WillowTree Apps, Inc.'
+__author__ = 'Ron DuPlain, Matt Dawson, Thibaud Morel, & WillowTree Apps, Inc.'
+__copyright__ = 'Copyright 2010-2012, WillowTree Apps, Inc.'
 __credits__ = ['Matt Dawson',
                'Ron DuPlain',
                "Thibaud Morel l'Horset",
+               'Tim Willis',
                ]
 
 
