@@ -34,4 +34,13 @@ Our route is ``/argument/<argument>/`` and the routed template only contains::
 'argument: this_is_my_argument'
 >>>
 
-I'm convinced this works.  Are you convinced?
+Let's verify that our view argument processor functions in the error case.
+
+>>> from flask import render_template_string
+>>> @app.errorhandler(404)
+... def not_found(error):
+...     return render_template_string('Content matters not. Also, not found.')
+...
+>>> client.get('/does/not/exist/').data
+'Content matters not. Also, not found.'
+>>>
