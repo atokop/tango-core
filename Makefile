@@ -19,12 +19,12 @@ install:
 
 develop: setup.py
 	easy_install pip
-	easy_install tox
-	easy_install Flask-Testing
-	easy_install nose nose-exclude minimock==1.2.5
-	easy_install coverage
-	easy_install pyflakes
-	easy_install docutils
+	pip install tox
+	pip install Flask-Testing
+	pip install nose nose-exclude minimock==1.2.5
+	pip install coverage
+	pip install pyflakes
+	pip install docutils
 	$(setup) develop
 	touch develop
 
