@@ -12,7 +12,7 @@ sys.path.append('tests/errors')
 
 setup(
     name='Tango',
-    version='0.2.3',
+    version='0.2.4',
     url='http://www.willowtreeapps.com',
     license='BSD',
     author='Ron DuPlain',
