@@ -183,6 +183,18 @@ def build_app(import_name, import_stash=False, use_snapshot=True,
         for route in app.routes:
             app.build_view(route)
 
-    app.context_processor(lambda: request.view_args
-                          if request.view_args else {})
+    @app.context_processor
+    def process_view_args():
+        """Put view arguments into template context for tango template writers.
+
+        The Flask Request object has a dictionary of the request handler
+        function's arguments, but this is None when there are no view
+        arguments. A Flask context processor must always return a dictionary.
+
+        http://flask.pocoo.org/docs/api/#flask.Request.view_args
+        """
+        if request.view_args is None:
+            return {}
+        return request.view_args
+
     return app
