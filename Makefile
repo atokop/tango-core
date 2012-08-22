@@ -13,6 +13,8 @@ pypi_update = $(setup) sdist upload
 # verify error handling and (2) examples include network I/O which should not
 # be hit on the test runner. The tests/exclude.txt file includes a listing of
 # directories to exclude, relative to the root directory of the project.
+#
+# Keep this command line in sync with tox.ini.
 nosetests = python -W ignore::DeprecationWarning setup.py nosetests
 nosetests := $(nosetests) --with-doctest --doctest-extension=.rst
 nosetests := $(nosetests) --exclude-dir-file=tests/exclude.txt
