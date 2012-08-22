@@ -1,0 +1,3 @@
+examples/
+talks/
+tests/errors/

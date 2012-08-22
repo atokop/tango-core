@@ -3,9 +3,19 @@
 all: flakes test todo
 
 setup = python setup.py
-nosetests = python -W ignore::DeprecationWarning setup.py nosetests
 tarball = `ls -1rt ./dist/*.tar* | tail -1`
 pypi_update = $(setup) sdist upload
+
+# The nose test runner will collect all test suites, execute doctests in the
+# source and in .rst files, and import all files to ensure each Python module
+# is properly formatted. Exclude some directories from auto-import using
+# nose-exclude, particularly where (1) test fixtures have intentional errors to
+# verify error handling and (2) examples include network I/O which should not
+# be hit on the test runner. The tests/exclude.txt file includes a listing of
+# directories to exclude, relative to the root directory of the project.
+nosetests = python -W ignore::DeprecationWarning setup.py nosetests
+nosetests := $(nosetests) --with-doctest --doctest-extension=.rst
+nosetests := $(nosetests) --exclude-dir-file=tests/exclude.txt
 
 clean:
 	find . -name '*.py[co]' -delete
