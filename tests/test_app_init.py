@@ -1,6 +1,6 @@
 import unittest
 
-from flaskext.testing import TestCase
+from flask.ext.testing import TestCase
 
 from tango.factory.app import build_app
 

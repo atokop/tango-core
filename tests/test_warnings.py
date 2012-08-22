@@ -1,7 +1,7 @@
 import unittest
 import warnings
 
-from flaskext.testing import TestCase
+from flask.ext.testing import TestCase
 
 from tango.app import Tango
 from tango.errors import DuplicateContextWarning, DuplicateExportWarning

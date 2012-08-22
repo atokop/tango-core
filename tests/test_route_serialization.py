@@ -2,7 +2,7 @@ import cPickle as pickle
 import pickletools
 import unittest
 
-from flaskext.testing import TestCase
+from flask.ext.testing import TestCase
 
 from tango.app import Route
 from tango.factory.app import build_app

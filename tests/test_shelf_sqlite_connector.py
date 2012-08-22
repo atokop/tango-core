@@ -2,7 +2,7 @@ import os
 import tempfile
 import unittest
 
-from flaskext.testing import TestCase
+from flask.ext.testing import TestCase
 
 from tango.app import Tango
 from tango.shelf import SqliteConnector

@@ -4,10 +4,10 @@ from contextlib import contextmanager
 import os
 import sys
 
-from flaskext.script import Command, Option
-from flaskext.script import Manager as BaseManager
-from flaskext.script import Server as BaseServer
-from flaskext.script import Shell as BaseShell
+from flask.ext.script import Command, Option
+from flask.ext.script import Manager as BaseManager
+from flask.ext.script import Server as BaseServer
+from flask.ext.script import Shell as BaseShell
 
 from tango.app import Tango
 from tango.factory.app import get_app
