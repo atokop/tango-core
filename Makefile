@@ -4,7 +4,7 @@ all: flakes test todo
 
 setup = python setup.py
 tarball = `ls -1rt ./dist/*.tar* | tail -1`
-pypi_update = $(setup) sdist upload
+sdist = $(setup) sdist --formats=bztar
 
 # The nose test runner will collect all test suites, execute doctests in the
 # source and in .rst files, and import all files to ensure each Python module
@@ -58,7 +58,7 @@ smoke: develop
 coverage: test
 
 dist: develop
-	$(setup) sdist
+	$(sdist)
 	@echo
 	@echo Tarball for distribution:
 	@echo $(tarball)
@@ -66,7 +66,7 @@ dist: develop
 distribute: dist
 
 publish:
-	$(pypi_update)
+	$(sdist) update
 
 doc_files := $(patsubst %.rst,%.html,$(wildcard *.rst))
 doc_deep_files := $(patsubst %.rst,%.html,$(wildcard **/*.rst))

@@ -5,7 +5,6 @@ from jinja2 import Environment, PackageLoader, TemplateNotFound
 from werkzeug import LocalProxy as Proxy
 from werkzeug.utils import get_content_type
 
-import tango
 from tango.errors import NoSuchWriterException
 from tango.imports import module_is_package
 from tango.writers import TemplateWriter, TextWriter, JsonWriter
@@ -29,8 +28,6 @@ class Tango(Flask):
 
     def set_default_config(self):
         self.config.from_object('tango.config')
-        self.config['TANGO_VERSION'] = tango.__fullversion__
-        self.config['TANGO_MAINTAINER'] = tango.__contact__
 
     def create_jinja_environment(self):
         options = dict(self.jinja_options)
@@ -108,20 +105,6 @@ class Tango(Flask):
             response.content_type = get_content_type(mimetype, charset)
             response.headers['Content-Type'] = response.content_type
         return response
-
-    @property
-    def version(self):
-        """Application version information, Tango versioning by default.
-
-        Test:
-        >>> app = Tango('simplesite')
-        >>> print app.version # doctest:+ELLIPSIS
-        Tango ...
-        Maintainer: ...
-        >>>
-        """
-        return tango.build_label(self.config['TANGO_VERSION'],
-                                 self.config['TANGO_MAINTAINER'])
 
 
 class Route(object):
