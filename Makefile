@@ -33,7 +33,7 @@ develop: setup.py
 	easy_install pip
 	pip install tox
 	pip install Flask-Testing
-	pip install nose nose-exclude minimock==1.2.5
+	pip install nose nose-exclude 'minimock>1.2.6'
 	pip install coverage
 	pip install pyflakes
 	pip install docutils
