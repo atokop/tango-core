@@ -50,11 +50,23 @@ Command line: ``tango``
 
 Command line: ``tango version``
 
+This is a naive test which verifies something is printed, needs update on 1.0.
+
 >>> call('version')
 ... # doctest:+ELLIPSIS
-Tango ...
-Maintainer: ...
+0...
 >>>
+
+The version is UNKNOWN if unable to determine the version number.
+
+>>> import sys
+>>> import pkg_resources
+>>> sys.modules['pkg_resources'] = None
+>>> call('version')
+UNKNOWN
+>>> sys.modules['pkg_resources'] = pkg_resources
+>>>
+
 
 
 Command line: ``tango serve simplesite``
