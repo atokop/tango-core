@@ -32,6 +32,7 @@ setup(
         'oauth2',
         'pytest',
         'pyyaml',
+        'cssselect',
         ],
     entry_points={
         'console_scripts': [
