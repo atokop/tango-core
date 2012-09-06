@@ -43,7 +43,10 @@ develop: setup.py
 flakes: develop
 	find . -name '*.py' | grep -v .tox | xargs pyflakes | grep -v local_config; true
 
-test: develop
+test: | develop test-command
+
+# Split into separate make target without dependency, for tox.
+test-command:
 	$(nosetests) --with-coverage --cover-package=tango --cover-erase
 
 full-test: develop
