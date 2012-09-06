@@ -40,6 +40,7 @@ setup(
             ],
         },
     tests_require=[
+        # Update Makefile and tox.ini on changes to this block.
         'nose',
         'minimock>1.2.6',
         'Flask-Testing',
