@@ -33,6 +33,7 @@ setup(
         'pytest',
         'pyyaml',
         'cssselect',
+        'sphinx',
         ],
     entry_points={
         'console_scripts': [
