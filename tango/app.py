@@ -26,6 +26,12 @@ class Tango(Flask):
         self.writers = {}
         self.register_default_writers()
 
+        if self.config.get('REQUEST_CLASS') is not None:
+            self.request_class = self.config['REQUEST_CLASS']
+
+        if self.config.get('RESPONSE_CLASS') is not None:
+            self.response_class = self.config['RESPONSE_CLASS']
+
     def set_default_config(self):
         self.config.from_object('tango.config')
 

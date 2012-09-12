@@ -1,5 +1,6 @@
 "Core configuration directives for Tango framework and new Tango objects."
 
+from tango.http import Request, Response
 from tango.shelf import SqliteConnector
 from tango.writers import TextWriter
 
@@ -8,7 +9,11 @@ from tango.writers import TextWriter
 SHELF_CONNECTOR_CLASS = SqliteConnector
 SQLITE_FILEPATH = '/tmp/tango.db'
 
-# Response defaults.
+## Request/response defaults.
+# Select request & response classes, for use in writers & in Flask handlers.
+REQUEST_CLASS = Request
+RESPONSE_CLASS = Response
+
 # It might be tempting to use a default writer class and not instance.
 # But the writer is a callable not a data structure.
 DEFAULT_WRITER = TextWriter()
