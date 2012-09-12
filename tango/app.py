@@ -1,9 +1,8 @@
 "Core Tango classes for creating applications from Tango sites."
 
-from flask import Flask, request, _request_ctx_stack
+from flask import Flask, request
 from jinja2 import Environment, PackageLoader, TemplateNotFound
 from werkzeug import LocalProxy as Proxy
-from werkzeug.utils import get_content_type
 
 from tango.errors import NoSuchWriterException
 from tango.imports import module_is_package
@@ -18,7 +17,7 @@ class Tango(Flask):
 
     def __init__(self, import_name, *args, **kwargs):
         if module_is_package(import_name):
-            # Flask.__init__ sets static path based on sys.modules.
+            # Flask.__init__ v0.9 sets static path based on sys.modules.
             # As such, import the package here to ensure it's in sys.modules.
             __import__(import_name)
         Flask.__init__(self, import_name, *args, **kwargs)
@@ -32,6 +31,14 @@ class Tango(Flask):
         if self.config.get('RESPONSE_CLASS') is not None:
             self.response_class = self.config['RESPONSE_CLASS']
 
+        # The writer to use when no writer is specified in the stash route.
+        # Initialized as None here, as this is provided in config.py.
+        #
+        # Configure the default writer on first call to get_writer in order to
+        # allow the default writer class to be configured in the application's
+        # config after Tango instance creation.
+        self.default_writer = None
+
     def set_default_config(self):
         self.config.from_object('tango.config')
 
@@ -42,43 +49,27 @@ class Tango(Flask):
         return Environment(loader=TemplateLoader(self.import_name), **options)
 
     def register_default_writers(self):
-        self.register_writer('text', TextWriter())
-        self.register_writer('json', JsonWriter())
+        self.register_writer('text', TextWriter(self))
+        self.register_writer('json', JsonWriter(self))
+        # The default writer (key: None) is configured in get_writer.
 
     def register_writer(self, name, writer):
         self.writers[name] = writer
 
-    def writer(self, a_callable):
-        """Decorator to register a callable as a response writer.
-
-        The writer must take one argument, a template context dictionary,
-        and should return a unicode instance.
-
-        Test:
-        >>> app = Tango('simplesite')
-        >>> app.writers.get('my_writer')
-        >>> @app.writer
-        ... def my_writer(context):
-        ...     return unicode(context)
-        ...
-        >>> app.writers.get('my_writer') # doctest:+ELLIPSIS
-        <function my_writer at 0x...>
-        >>>
-        """
-        self.register_writer(a_callable.__name__, a_callable)
-        return a_callable
-
     def get_writer(self, name):
         # Do not register writer for None, in case of config change.
         if name is None:
-            return self.config['DEFAULT_WRITER']
+            if self.default_writer is None:
+                # Bootstrap default_writer instance with class given in config.
+                self.default_writer = self.config['DEFAULT_WRITER_CLASS'](self)
+            return self.default_writer
         writer = self.writers.get(name)
         if writer is not None:
             return writer
         # A writer prefixed with 'template:' is for a template.
         if name.startswith('template:'):
             template_name = name.replace('template:', '', 1)
-            writer = TemplateWriter(template_name)
+            writer = TemplateWriter(self, template_name)
             self.register_writer(name, writer)
             return writer
         raise NoSuchWriterException(name)
@@ -92,25 +83,11 @@ class Tango(Flask):
         rule = route.rule
         writer = self.get_writer(route.writer_name)
         def view(*args, **kwargs):
-            ctx = _request_ctx_stack.top
-            ctx.mimetype = writer.mimetype
-            return writer.write(self.connector.get(site, rule))
+            # Pass the actual request object, and not a proxy.
+            return writer(request._get_current_object(),
+                          self.connector.get(site, rule))
         view.__name__ = route.rule
         return self.route(route.rule, **options)(view)
-
-    def process_response(self, response):
-        """Inject mimetype into response before it's sent to the WSGI server.
-
-        This is only intended for stashable view functions, created by
-        :meth:`Tango.build_view`.
-        """
-        Flask.process_response(self, response)
-        ctx = _request_ctx_stack.top
-        if hasattr(ctx, 'mimetype'):
-            mimetype, charset = (ctx.mimetype, response.charset)
-            response.content_type = get_content_type(mimetype, charset)
-            response.headers['Content-Type'] = response.content_type
-        return response
 
 
 class Route(object):

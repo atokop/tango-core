@@ -14,9 +14,9 @@ SQLITE_FILEPATH = '/tmp/tango.db'
 REQUEST_CLASS = Request
 RESPONSE_CLASS = Response
 
-# It might be tempting to use a default writer class and not instance.
-# But the writer is a callable not a data structure.
-DEFAULT_WRITER = TextWriter()
+# Default writer class to use, when no writer is given for a route.
+DEFAULT_WRITER_CLASS = TextWriter
+
 
 # Date formats.
 # Default date/datetime formats. If None, uses ISO 8601 format.
