@@ -18,6 +18,9 @@ class BaseConnector(object):
     def put(self, site, rule, context):
         raise NotImplementedError('A shelf connector must implement put.')
 
+    def drop(self, site, rule=None):
+        raise NotImplementedError('A shelf connector must implement drop.')
+
 
 class SqliteConnector(BaseConnector):
     def initialize(self):
@@ -71,3 +74,16 @@ class SqliteConnector(BaseConnector):
                            'WHERE site = ? AND rule = ?;',
                            (serialized, site, rule))
             db.commit()
+
+    def drop(self, site, rule=None):
+        if rule is None:
+            rule = '%'
+        with self.connection() as db:
+            cursor = db.execute('SELECT id FROM contexts '
+                                'WHERE site = ? '
+                                'AND rule LIKE ?;', (site, rule))
+            if cursor.fetchone() is not None:
+                db.execute('DELETE FROM contexts '
+                           'WHERE site = ? AND rule LIKE ?;', (site, rule))
+
+                db.commit()

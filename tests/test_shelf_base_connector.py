@@ -28,6 +28,9 @@ class BaseConnectorTestCase(TestCase):
     def test_put_notimplemented(self):
         self.assertRaises(NotImplementedError, self.connector.put, '', '', {})
 
+    def test_drop_notimplemented(self):
+        self.assertRaises(NotImplementedError, self.connector.drop, '', '')
+
 
 if __name__ == '__main__':
     unittest.main()
