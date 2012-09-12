@@ -13,7 +13,7 @@ exports:
 #     pip install requests
 #     cd examples
 #     tango serve gists # in one terminal
-#     tango shelve gists # in another, shelves to /tmp/tango.db.
+#     tango shelve gists # in another, shelves to /tmp/tango-USERNAME.db.
 
 import requests
 import json

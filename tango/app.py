@@ -75,7 +75,7 @@ class Tango(Flask):
         raise NoSuchWriterException(name)
 
     @property
-    def connector(self):
+    def shelf(self):
         return self.config['SHELF_CONNECTOR_CLASS'](self)
 
     def build_view(self, route, **options):
@@ -85,7 +85,7 @@ class Tango(Flask):
         def view(*args, **kwargs):
             # Pass the actual request object, and not a proxy.
             return writer(request._get_current_object(),
-                          self.connector.get(site, rule))
+                          self.shelf.get(site, rule))
         view.__name__ = route.rule
         return self.route(route.rule, **options)(view)
 

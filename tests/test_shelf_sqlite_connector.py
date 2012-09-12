@@ -17,7 +17,7 @@ class SqliteConnectorTestCase(TestCase, ConnectorCommonTests):
 
     def setUp(self):
         _, self.temp_filepath = tempfile.mkstemp(suffix='.db')
-        self.app.config['SQLITE_FILEPATH'] = self.temp_filepath
+        self.app.config['SHELF_SQLITE_FILEPATH'] = self.temp_filepath
         self.connector = SqliteConnector(self.app)
 
     def tearDown(self):

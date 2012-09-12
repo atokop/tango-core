@@ -1,13 +1,20 @@
-"Core configuration directives for Tango framework and new Tango objects."
+"Default configuration for new Tango instances."
+
+from getpass import getuser
 
 from tango.http import Request, Response
 from tango.shelf import SqliteConnector
 from tango.writers import TextWriter
 
 
-# Default stash shelf configuration.
+## Default stash shelf configuration.
+# By default, use a SQLite connector. Production ready and no added dependency.
 SHELF_CONNECTOR_CLASS = SqliteConnector
-SQLITE_FILEPATH = '/tmp/tango.db'
+
+# Use a determinate filepath, with username to avoid permission collisions.
+# Note that getuser reads environment variables and can be easily spoofed.
+SHELF_SQLITE_FILEPATH = '/tmp/tango-%(user)s.db' % {'user': getuser()}
+
 
 ## Request/response defaults.
 # Select request & response classes, for use in writers & in Flask handlers.

@@ -41,7 +41,7 @@ class SqliteConnector(BaseConnector):
     def connect(self, initialize=True):
         if initialize:
             self.initialize()
-        return sqlite3.connect(self.app.config['SQLITE_FILEPATH'])
+        return sqlite3.connect(self.app.config['SHELF_SQLITE_FILEPATH'])
 
     def connection(self):
         return closing(self.connect())

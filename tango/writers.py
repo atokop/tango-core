@@ -15,6 +15,7 @@ Writers are initialized with Tango instances in order to get access to:
 * app.config
 * app.response_class
 * app.logger
+* app.shelf
 """
 
 import json

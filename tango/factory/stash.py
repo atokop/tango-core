@@ -20,6 +20,6 @@ def shelve(app_or_name, logfile=None):
         site, rule, context = route.site, route.rule, route.context
         if logfile is not None:
             logfile.write('Stashing {0} {1} ... '.format(site, rule))
-        app.connector.put(site, rule, context)
+        app.shelf.put(site, rule, context)
         if logfile is not None:
             logfile.write('done.\n')
