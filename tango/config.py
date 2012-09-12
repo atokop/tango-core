@@ -25,9 +25,11 @@ RESPONSE_CLASS = Response
 DEFAULT_WRITER_CLASS = TextWriter
 
 
-# Date formats.
-# Default date/datetime formats. If None, uses ISO 8601 format.
+## Date formats.
+# Default date/datetime formats, for use in template filters and JSON encoding.
+# If None, uses ISO 8601 format.
+#
 # See strftime table here:
 # http://docs.python.org/library/datetime.html#strftime-and-strptime-behavior
-DEFAULT_DATETIME_FORMAT = None
-DEFAULT_DATE_FORMAT = None
+DEFAULT_DATETIME_FORMAT = None # For datetime.datetime objects.
+DEFAULT_DATE_FORMAT = None # For datetime.date objects.
