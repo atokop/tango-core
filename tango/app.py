@@ -14,7 +14,7 @@ import tango.filters
 
 
 class Tango(Flask):
-    "Application class for a Tango site."
+    "Application class for tango site, often built with factory classmethods."
 
     def __init__(self, import_name, *args, **kwargs):
         if module_is_package(import_name):
@@ -78,6 +78,34 @@ class Tango(Flask):
     @property
     def shelf(self):
         return self.config['SHELF_CONNECTOR_CLASS'](self)
+
+    def shelve(self, logfile=None):
+        """Shelve the route contexts of this app.
+
+        Does not return anything, and inherently has side-effects:
+        >>> Tango.build_app('simplest').shelve()
+        >>>
+        """
+        for route in self.routes:
+            site, rule, context = route.site, route.rule, route.context
+            if logfile is not None:
+                logfile.write('Stashing {0} {1} ... '.format(site, rule))
+            self.shelf.put(site, rule, context)
+            if logfile is not None:
+                logfile.write('done.\n')
+
+    @classmethod
+    def shelve_by_name(cls, name, logfile=None):
+        """Shelve the route contexts of an app matching import name.
+
+        Does not return anything, and inherently has side-effects:
+        >>> Tango.shelve_by_name('simplest') # doctest:+ELLIPSIS
+        <tango.app.Tango object at 0x...>
+        >>>
+        """
+        app = cls.build_app(name, import_stash=True, logfile=logfile)
+        app.shelve(logfile=logfile)
+        return app
 
     def build_view(self, route, **options):
         site = route.site
@@ -267,34 +295,6 @@ class Tango(Flask):
                 return {}
             return request.view_args
 
-        return app
-
-    def shelve(self, logfile=None):
-        """Shelve the route contexts of this app.
-
-        Does not return anything, and inherently has side-effects:
-        >>> Tango.build_app('simplest').shelve()
-        >>>
-        """
-        for route in self.routes:
-            site, rule, context = route.site, route.rule, route.context
-            if logfile is not None:
-                logfile.write('Stashing {0} {1} ... '.format(site, rule))
-            self.shelf.put(site, rule, context)
-            if logfile is not None:
-                logfile.write('done.\n')
-
-    @classmethod
-    def shelve_by_name(cls, name, logfile=None):
-        """Shelve the route contexts of an app matching import name.
-
-        Does not return anything, and inherently has side-effects:
-        >>> Tango.shelve_by_name('simplest') # doctest:+ELLIPSIS
-        <tango.app.Tango object at 0x...>
-        >>>
-        """
-        app = cls.build_app(name, import_stash=True, logfile=logfile)
-        app.shelve(logfile=logfile)
         return app
 
 
