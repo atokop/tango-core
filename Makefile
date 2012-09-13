@@ -69,7 +69,7 @@ dist: develop
 distribute: dist
 
 publish:
-	$(sdist) update
+	$(sdist) upload
 
 doc_files := $(patsubst %.rst,%.html,$(wildcard *.rst))
 doc_deep_files := $(patsubst %.rst,%.html,$(wildcard **/*.rst))
