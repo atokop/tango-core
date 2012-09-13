@@ -31,6 +31,9 @@ class BaseConnectorTestCase(TestCase):
     def test_drop_notimplemented(self):
         self.assertRaises(NotImplementedError, self.connector.drop, '', '')
 
+    def test_list_notimplemented(self):
+        self.assertRaises(NotImplementedError, self.connector.list, '')
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,6 +21,11 @@ class BaseConnector(object):
     def drop(self, site, rule=None):
         raise NotImplementedError('A shelf connector must implement drop.')
 
+    def list(self, site=None):
+        """Return list of routes.  If a site is specified, only
+        routes for that site will be returned.
+        """
+        raise NotImplementedError('A shelf connector must implement list.')
 
 class SqliteConnector(BaseConnector):
     def initialize(self):
@@ -87,3 +92,12 @@ class SqliteConnector(BaseConnector):
                            'WHERE site = ? AND rule LIKE ?;', (site, rule))
 
                 db.commit()
+
+    def list(self, site, rule=None):
+        if rule is None:
+            rule = '%'
+        with self.connection() as db:
+            cursor = db.execute('SELECT site, rule FROM contexts '
+                                'WHERE site = ? AND rule LIKE ?;',
+                                (site, rule))
+            return cursor.fetchall()

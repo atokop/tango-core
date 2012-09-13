@@ -51,3 +51,22 @@ class ConnectorCommonTests(object):
         self.assertEqual(self.connector.get('site', 'one'), {})
         self.assertEqual(self.connector.get('site', 'two'), {})
 
+    def test_list_items(self):
+        site_results = []
+
+        self.connector.put('site', 'a', {})
+        site_results.append(('site', 'a'))
+
+        self.assertEqual(self.connector.list('site'), site_results)
+        self.assertEqual(self.connector.list('site', 'a'), [('site', 'a')])
+
+        self.connector.put('site', 'b', {})
+        site_results.append(('site', 'b'))
+
+        self.assertEqual(self.connector.list('site'), site_results)
+        self.assertEqual(self.connector.list('site', 'a'), [('site', 'a')])
+        self.assertEqual(self.connector.list('site', 'b'), [('site', 'b')])
+
+        self.connector.put('other', 'a', {})
+        self.assertEqual(self.connector.list('other', 'a'), [('other', 'a')])
+        self.assertEqual(self.connector.list('site'), site_results)
