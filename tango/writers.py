@@ -18,6 +18,7 @@ Writers are initialized with Tango instances in order to get access to:
 * app.shelf
 """
 
+import datetime
 import json
 import mimetypes
 
@@ -104,15 +105,47 @@ class JsonWriter(BaseWriter):
     {"answer": 42, "count": ["one", "two"],
      "adict": {"second": 2, "first": 1}, "title": "Test Title"}
     >>>
+
+    This writer handles date/datetime objects using the formats in app.config.
+    >>> import datetime
+    >>> context = {"answer": 42, "adate": datetime.date(2012, 9, 13),
+    ...            "adatetime": datetime.datetime(2012, 9, 13, 14, 40)}
+    >>> app = Tango(__name__)
+    >>> json = JsonWriter(app)
+    >>> print json(None, context).data
+    {"answer": 42, "adate": "2012-09-13", "adatetime": "2012-09-13 14:40:00"}
+    >>> app.config['DEFAULT_DATETIME_FORMAT'] = '%m/%d/%Y %H:%M'
+    >>> app.config['DEFAULT_DATE_FORMAT'] = '%d %b %Y'
+    >>> print json(None, context).data
+    {"answer": 42, "adate": "13 Sep 2012", "adatetime": "09/13/2012 14:40"}
+    >>>
     """
 
     mimetype = 'application/json'
 
     def write(self, request, context):
+        # Trim context down to those values which are JSON serializable.
         trimmed_context = {}
         for key, value in context.items():
             try:
+                # Format datetime & date objects into strings.
+                # If strf format is invalid, will raise a TypeError.
+                if isinstance(value, datetime.datetime):
+                    format = self.app.config['DEFAULT_DATETIME_FORMAT']
+                    if format is not None:
+                        value = value.strftime(format)
+                    else:
+                        value = str(value)
+                if isinstance(value, datetime.date):
+                    format = self.app.config['DEFAULT_DATE_FORMAT']
+                    if format is not None:
+                        value = value.strftime(format)
+                    else:
+                        value = str(value)
+
+                # Trigger a TypeError if this value is not JSON serializable.
                 json.dumps({key: value})
+
                 trimmed_context[key] = value
             except TypeError:
                 # This value is not json serializable.
