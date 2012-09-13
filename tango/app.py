@@ -2,14 +2,13 @@
 
 from flask import Flask, request
 from jinja2 import Environment, PackageLoader, TemplateNotFound
-from werkzeug import LocalProxy as Proxy
 
 from tango.errors import NoSuchWriterException
 from tango.imports import module_is_package
 from tango.writers import TemplateWriter, TextWriter, JsonWriter
 
 
-__all__ = ['Tango', 'request', 'Proxy']
+__all__ = ['Tango', 'Route']
 
 
 class Tango(Flask):

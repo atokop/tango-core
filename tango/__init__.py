@@ -1,4 +1,4 @@
-from flask import abort, request, session
+from flask import abort, current_app, request, session
 
 import app
 import config
@@ -8,8 +8,8 @@ import imports
 import tools
 
 
-__all__ = ['abort', 'errors', 'request', 'session', 'app', 'build', 'config',
-           'factory', 'imports', 'tools']
+__all__ = ['abort', 'app', 'config', 'current_app', 'errors', 'factory',
+           'imports', 'request', 'session', 'tools']
 
 
 # Provide simple version inspection on tango.__version__.
