@@ -72,7 +72,7 @@ Benefits
 
 * Productivity Measures
 
- * Tango snapshots data - develop templates without fetching data
+ * process data in a separate process - develop templates without fetching data
  * data sourcing occurs outside of web context - develop & unit-test data
    modules in isolation, in a simple scripting environment
 
@@ -132,8 +132,8 @@ which use utilities/tools provided by Tango.
 
 Need to drop into Flask development?  Simply::
 
-    from tango.factory.app import build_app
-    app = build_app('sitename')
+    from tango.app import Tango
+    app = Tango.build_app('sitename')
 
 This app is a flask.Flask instance ready for any of the APIs provided by `Flask
 <http://flask.pocoo.org/docs/>`_, a full web framework with a small accessible

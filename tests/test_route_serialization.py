@@ -4,14 +4,14 @@ import unittest
 
 from flask.ext.testing import TestCase
 
-from tango.app import Route
-from tango.factory.app import build_app
+from tango.app import Tango
+from tango.stash import Route
 
 
 class RouteSerializationTestCase(TestCase):
 
     def create_app(self):
-        return build_app('sampletypes', import_stash=True)
+        return Tango.build_app('sampletypes', import_stash=True)
 
     def setUp(self):
         self.original_route = self.app.routes[0]

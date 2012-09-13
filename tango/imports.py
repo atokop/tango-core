@@ -328,10 +328,10 @@ def package_submodule(hierarchical_module_name):
     Example:
     >>> package_submodule('simplesite')
     (None, 'simplesite')
-    >>> package_submodule('tango.factory')
-    ('tango', 'factory')
-    >>> package_submodule('tango.factory.stash')
-    ('tango.factory', 'stash')
+    >>> package_submodule('tango.tools')
+    ('tango', 'tools')
+    >>> package_submodule('tango.tools.scraper')
+    ('tango.tools', 'scraper')
     >>> package_submodule('tango')
     (None, 'tango')
     >>> package_submodule('')
@@ -346,10 +346,10 @@ def namespace_segments(hierarchical_module_name):
     """Provide the namespace segments from a dotted module name.
 
     Example:
-    >>> namespace_segments('tango.factory')
-    ('tango', 'factory')
-    >>> namespace_segments('tango.factory.stash')
-    ('tango', 'factory', 'stash')
+    >>> namespace_segments('tango.tools')
+    ('tango', 'tools')
+    >>> namespace_segments('tango.tools.scraper')
+    ('tango', 'tools', 'scraper')
     >>> namespace_segments('tango.imports')
     ('tango', 'imports')
     >>> namespace_segments('simplesite')

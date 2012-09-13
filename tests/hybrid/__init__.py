@@ -1,4 +1,4 @@
-from tango.factory.app import build_app
+from tango.app import Tango
 
-app = build_app('hybrid')
+app = Tango.build_app('hybrid')
 app.this_was_added_after_stash = 'Hello, world!'

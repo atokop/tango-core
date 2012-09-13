@@ -3,12 +3,11 @@ from flask import abort, current_app, request, session
 import app
 import config
 import errors
-import factory
 import imports
 import tools
 
 
-__all__ = ['abort', 'app', 'config', 'current_app', 'errors', 'factory',
+__all__ = ['abort', 'app', 'config', 'current_app', 'errors',
            'imports', 'request', 'session', 'tools']
 
 

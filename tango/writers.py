@@ -128,9 +128,9 @@ class TemplateWriter(BaseWriter):
     register as a writer under the name of the template.
 
     Test:
-    >>> from tango.factory.app import build_app
+    >>> from tango.app import Tango
     >>> from flask import request
-    >>> app = build_app('simplesite')
+    >>> app = Tango.build_app('simplesite')
     >>> ctx = app.test_request_context()
     >>> ctx.push()
     >>> template_writer = TemplateWriter(app, 'index.html')

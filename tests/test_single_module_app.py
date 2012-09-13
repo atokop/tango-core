@@ -1,6 +1,6 @@
 import unittest
 
-from tango.factory.app import get_app
+from tango.app import Tango
 
 
 class SingleModuleAppTestCase(unittest.TestCase):
@@ -16,12 +16,14 @@ class SingleModuleAppTestCase(unittest.TestCase):
     # These tests could try/except, and self.fail('...') on Exception.
     # But then a developer does not get meaningful tracebacks.
     def test_importerror_app(self):
-        get_app('importerror') # must load single-module apps without import
-        # Test passes if get_app('importerror') did not error out.
+        # Must load single-module apps without import.
+        # Test passes if Tango.get_app('importerror') did not error out.
+        Tango.get_app('importerror')
 
     def test_indexerror_app(self):
-        get_app('indexerror') # must load single-module apps without import
-        # Test passes if get_app('indexerror') did not error out.
+        # Must load single-module apps without import.
+        # Test passes if Tango.get_app('indexerror') did not error out.
+        Tango.get_app('indexerror')
 
 
 if __name__ == '__main__':

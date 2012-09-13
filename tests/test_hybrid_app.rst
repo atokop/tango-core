@@ -6,8 +6,8 @@ using the vanilla Flask APIs.
 
 Let's try it.  Start by building a Tango application.
 
->>> from tango.factory.app import build_app
->>> app = build_app('simplesite')
+>>> from tango.app import Tango
+>>> app = Tango.build_app('simplesite')
 
 Create a test client.
 

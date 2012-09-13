@@ -4,12 +4,55 @@ import warnings
 
 import yaml
 
-from tango.app import Route
 from tango.errors import DuplicateContextWarning, DuplicateExportWarning
 from tango.errors import DuplicateRouteWarning, HeaderException
 from tango.errors import ModuleNotFound
 from tango.imports import discover_modules, get_module
 from tango.imports import get_module_filepath, get_module_docstring
+
+
+class Route(object):
+    "Route metadata for a Tango stashable context module."
+
+    # required site field in the header
+    site = None
+
+    # required url rule/path of this route
+    rule = None
+
+    # required dict of variable names & values imported into route's context
+    # an export's value is None when it has not yet been imported
+    exports = None
+
+    # list of exports which are statically set in header
+    static = None
+
+    # name of writer to use in rendering route, may be template name
+    writer_name = None
+
+    # context as exported by stashable module, for template or serialization
+    context = None
+
+    # modules from which this stash module was constructed
+    modules = None
+
+    def __init__(self, site, rule, exports, static=None, writer_name=None,
+                 context=None, modules=None):
+        self.site = site
+        self.rule = rule
+        self.exports = exports
+        self.static = static
+        self.writer_name = writer_name
+
+        self.context = context
+        self.modules = modules
+
+    def __repr__(self):
+        pattern = u'<Route: {0}{1}>'
+        if self.writer_name is None:
+            return pattern.format(self.rule, '')
+        else:
+            return pattern.format(self.rule, ', {0}'.format(self.writer_name))
 
 
 def build_module_routes(module_or_name, import_stash=False, logfile=None):

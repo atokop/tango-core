@@ -3,14 +3,14 @@ import unittest
 
 from flask.ext.testing import TestCase
 
-from tango.factory.app import build_app
+from tango.app import Tango
 from tango import filters
 
 
 class FiltersTestCase(TestCase):
 
     def create_app(self):
-        return build_app('simplesite')
+        return Tango.build_app('simplesite')
 
     def setUp(self):
         self.client = self.app.test_client()

@@ -40,7 +40,6 @@ Command line: ``tango``
 >>> call()
 ... # doctest:+NORMALIZE_WHITESPACE
  Please provide a command
-  snapshot  Pull context from a stashable Tango site and store it into an image file.
   shell     Runs a Python shell inside Tango application context.
   serve     Run a Tango site on the local machine, for development.
   version   Display this version of Tango.
@@ -102,75 +101,6 @@ Called tango.app.Tango.run(
     port=5000,
     use_debugger=True,
     use_reloader=True)
->>>
-
-
-Command line: ``tango snapshot simplesite``
-
->>> call('snapshot simplesite')
-Snapshot of full stashable template context: simplesite.dat
-
-
-Command line: ``tango snapshot simplest``
-
->>> call('snapshot simplest')
-Snapshot of full stashable template context: simplest.dat
->>>
-
-
-Command line: ``tango snapshot simplest.py``
-
->>> call('snapshot simplest.py')
-Snapshot of full stashable template context: simplest.dat
->>>
-
-
-Command line: ``tango serve simplesite`` with snapshot available
-
->>> call('serve simplesite')
-Using snapshot with stashed routes.
-Called tango.app.Tango.run(
-    debug=True,
-    host='127.0.0.1',
-    port=5000,
-    use_debugger=True,
-    use_reloader=True)
->>>
-
-
-Command line: ``tango serve simplest`` with snapshot available
-
->>> call('serve simplest')
-Using snapshot with stashed routes.
-Called tango.app.Tango.run(
-    debug=True,
-    host='127.0.0.1',
-    port=5000,
-    use_debugger=True,
-    use_reloader=True)
->>>
-
-
-Command line: ``tango serve simplest.py`` with snapshot available
-
->>> call('serve simplest.py')
-Using snapshot with stashed routes.
-Called tango.app.Tango.run(
-    debug=True,
-    host='127.0.0.1',
-    port=5000,
-    use_debugger=True,
-    use_reloader=True)
->>>
-
-
-Remove snapshot.
-
->>> import os
->>> os.system('rm -f simplesite.dat')
-0
->>> os.system('rm -f simplest.dat')
-0
 >>>
 
 
@@ -308,15 +238,6 @@ Command line: ``tango serve doesnotexist``
 >>> call('serve doesnotexist')
 Traceback (most recent call last):
     ...
-SystemExit: 66
->>>
-
-
-Command line: ``tango snapshot doesnotexist``
-
->>> call('snapshot doesnotexist')
-Traceback (most recent call last):
- ...
 SystemExit: 66
 >>>
 

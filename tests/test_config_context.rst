@@ -4,8 +4,8 @@ Testing: Application Config in Templates
 Templates have a ``config`` variable in context to access the app
 configuration. Let's verify this functionality.
 
->>> from tango.factory.app import build_app
->>> app = build_app('testsite', import_stash=False)
+>>> from tango.app import Tango
+>>> app = Tango.build_app('testsite', import_stash=False)
 
 Set something in the configuration.
 

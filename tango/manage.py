@@ -10,11 +10,8 @@ from flask.ext.script import Server as BaseServer
 from flask.ext.script import Shell as BaseShell
 
 from tango.app import Tango
-from tango.factory.app import get_app
-from tango.factory.snapshot import build_snapshot
 from tango.imports import module_exists, fix_import_name_if_pyfile
 import tango
-import tango.factory.stash
 
 commands = []
 
@@ -59,21 +56,11 @@ def version():
 
 
 @command
-def snapshot(site):
-    "Pull context from a stashable Tango site and store it into an image file."
-    with no_pyc():
-        site = validate_site(site)
-        app = get_app(site, import_stash=True, use_snapshot=False)
-        filename = build_snapshot(app)
-        print 'Snapshot of full stashable template context:', filename
-
-
-@command
 def shelve(site):
     "Shelve an application's stash, as a worker process."
     with no_pyc():
         site = validate_site(site)
-        tango.factory.stash.shelve(site, logfile=sys.stdout)
+        Tango.shelve_by_name(site, logfile=sys.stdout)
 
 
 class Manager(BaseManager):
@@ -91,7 +78,7 @@ class Server(BaseServer):
 
     def handle(self, _, site, host, port, use_debugger, use_reloader):
         site = validate_site(site)
-        app = get_app(site)
+        app = Tango.get_app(site)
         app.run(host=host, port=port, debug=use_debugger,
                 use_debugger=use_debugger, use_reloader=use_reloader,
                 **self.server_options)
@@ -106,7 +93,7 @@ class Shell(BaseShell):
     def handle(self, _, site, *args, **kwargs):
         with no_pyc():
             site = validate_site(site)
-            app = get_app(site)
+            app = Tango.get_app(site)
             Command.handle(self, app, *args, **kwargs)
 
 

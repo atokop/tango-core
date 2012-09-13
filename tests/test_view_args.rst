@@ -15,8 +15,8 @@ your templates will have in their context ``argument`` with value ``'value'``.
 
 Let's test it.  Start by building a Tango application.
 
->>> from tango.factory.app import build_app
->>> app = build_app('testsite', import_stash=True)
+>>> from tango.app import Tango
+>>> app = Tango.build_app('testsite', import_stash=True)
 
 Create a test client.
 
