@@ -36,11 +36,6 @@ class ConnectorCommonTests(object):
         self.connector.put('yet', 'another', yetanother)
         self.assertEqual(self.connector.get('site', 'another'), another)
 
-    def test_remove_item(self):
-        self.test_new_item()
-        self.connector.drop('site', 'rule')
-        self.test_get_keymiss()
-
     def test_remove_items(self):
         item1 = {'spam': 'eggs'}
         item2 = {'foo': 'bar'}
@@ -48,6 +43,10 @@ class ConnectorCommonTests(object):
         self.connector.put('site', 'two', item2)
         self.assertEqual(self.connector.get('site', 'one'), item1)
         self.assertEqual(self.connector.get('site', 'two'), item2)
+        self.connector.drop('site', 'one')
+        self.assertEqual(self.connector.get('site', 'one'), {})
+        self.assertEqual(self.connector.get('site', 'two'), item2)
+        self.connector.put('site', 'one', item1)
         self.connector.drop('site')
         self.assertEqual(self.connector.get('site', 'one'), {})
         self.assertEqual(self.connector.get('site', 'two'), {})
