@@ -115,9 +115,11 @@ class JsonWriter(BaseWriter):
                 json.dumps({key: value})
                 trimmed_context[key] = value
             except TypeError:
-                # TODO: Do not just silently ignore this.
-                # value is not json serializable
-                pass
+                # This value is not json serializable.
+                self.app.logger.warn(
+                    "Unable to JSON serialize "
+                    "'%(key)s' with value: %(value)r" % locals()
+                )
         return self.app.response_class(json.dumps(trimmed_context))
 
 
