@@ -53,14 +53,9 @@ def no_pyc():
 @command
 def version():
     'Display this version of Tango.'
-    # Derive version metadata from the distribution, to allow version labels to be
-    # maintained in one place within this project.  Version will be UNKNOWN if
-    # parsing the version from the distribution fails for any reason.
-    # This project depends on 'distribute' to provide pkg_resources.
-    try:
-        print __import__('pkg_resources').get_distribution('Tango').version
-    except Exception:
-        print 'UNKNOWN'
+    # Reload tango to ensure version attribute is up to date.
+    reload(tango)
+    print tango.__version__
 
 
 @command
