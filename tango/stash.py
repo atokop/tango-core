@@ -1,5 +1,6 @@
 "Marshal template contexts exported declaratively by Tango stash modules."
 
+import os
 import warnings
 
 import yaml
@@ -9,6 +10,7 @@ from tango.errors import DuplicateRouteWarning, HeaderException
 from tango.errors import ModuleNotFound
 from tango.imports import discover_modules, get_module
 from tango.imports import get_module_filepath, get_module_docstring
+from tango.imports import fix_import_name_if_pyfile
 
 
 class Route(object):
@@ -168,6 +170,20 @@ def pull_context(route_objs):
         route_obj.context = context
 
     return route_objs
+
+
+def parse_header_of_filepath(filepath):
+    try:
+        filepath = os.path.abspath(filepath)
+
+        curdir = os.path.abspath(os.curdir)
+        os.chdir(os.path.dirname(filepath))
+
+        basename = os.path.basename(filepath)
+        import_name = fix_import_name_if_pyfile(basename)
+        return parse_header(import_name)
+    finally:
+        os.chdir(curdir)
 
 
 def parse_header(import_name):
