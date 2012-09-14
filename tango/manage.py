@@ -1,6 +1,7 @@
 "Console entry point and management & development tasks for Tango framework."
 
 from contextlib import contextmanager
+import cPickle as pickle
 import os
 import sys
 
@@ -11,9 +12,24 @@ from flask.ext.script import Shell as BaseShell
 
 from tango.app import Tango
 from tango.imports import module_exists, fix_import_name_if_pyfile
+from tango.errors import ModuleNotFound
 import tango
 
 commands = []
+
+
+def get_app(site, module=None):
+    try:
+        if module:
+            app = Tango.get_app(module)
+        else:
+            app = Tango.get_app(site)
+
+    except ModuleNotFound:
+        print "Cannot locate site: '{0}'.".format(site)
+        sys.exit(1)
+
+    return app
 
 
 def validate_site(site):
@@ -63,6 +79,103 @@ def shelve(site):
         Tango.shelve_by_name(site, logfile=sys.stdout)
 
 
+class Get(Command):
+    """Create shelf.dat
+    """
+    def run(self, site, rule, module):
+        app = get_app(site, module)
+
+        data =  {
+            'tango_version': tango.__version__,
+            'site': site,
+            'module': module,
+            'entries': [
+                {'rule': rule,
+                 'context': app.shelf.get(site, rule),
+                } for site, rule in app.shelf.list(site, rule)
+            ],
+        }
+
+        dat_file = open('shelf.dat', 'wb')
+        dat_file.write(pickle.dumps(data, pickle.HIGHEST_PROTOCOL))
+        dat_file.close()
+        print 'shelf.dat created.'
+
+    def get_options(self):
+        return (
+            Option('site', default=None),
+            Option('rule', nargs='?', default=None),
+            Option('-m', '--module', dest="module", default=None,
+                   help="Provide a module name if the top level module name "
+                        "differs from the site name."),
+        )
+
+class Put(Command):
+    """Load a shelf.dat file onto the shelf.
+    """
+    def run(self, filename):
+        with open(filename, 'rb') as dat_file:
+            data = pickle.loads(dat_file.read())
+
+            # TODO: Add version check here
+
+            module = data['module']
+            site = data['site']
+            entries = data['entries']
+
+            app = get_app(site, module)
+
+            for item in entries:
+                rule = item['rule']
+                context = item['context']
+                app.shelf.put(site, rule, context)
+
+    def get_options(self):
+        return (Option('filename'),)
+
+class Show(Command):
+    """Display the contents of the shelf.
+    """
+    def run(self, site, rule, module, show_context):
+        app = get_app(site, module)
+
+        for site, rule in app.shelf.list(site, rule):
+            print site, rule,
+            if show_context:
+                context = app.shelf.get(site, rule)
+                print context,
+            print
+
+    def get_options(self):
+        return(
+            Option('site', default=None),
+            Option('rule', nargs='?', default=None),
+            Option('-c', '--context', action='store_true', dest="show_context"),
+            Option('-m', '--module', dest="module", default=None,
+                   help="Provide a module name if the module name differs from"
+                        " the site name."),
+        )
+
+class Drop(Command):
+    """Drop the specified site or site/rule from the shelf.
+    """
+    def run(self, site, rule, module):
+        app = get_app(site, module)
+
+        app.shelf.drop(site, rule)
+        print 'dropped', site,
+        if rule:
+            print rule
+
+    def get_options(self):
+        return(
+            Option('site', default=None),
+            Option('rule', nargs='?', default=None),
+            Option('-m', '--module', dest="module", default=None,
+                   help="Provide a module name if the module name differs from"
+                        " the site name."),
+        )
+
 class Manager(BaseManager):
     def handle(self, prog, *args, **kwargs):
         # Chop off full path to program name in argument parsing.
@@ -104,6 +217,10 @@ def run():
 
     manager.add_command('serve', Server())
     manager.add_command('shell', Shell())
+    manager.add_command('show', Show())
+    manager.add_command('get', Get())
+    manager.add_command('put', Put())
+    manager.add_command('drop', Drop())
     for cmd in commands:
         manager.command(cmd)
     manager.run()

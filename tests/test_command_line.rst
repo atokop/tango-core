@@ -40,10 +40,14 @@ Command line: ``tango``
 >>> call()
 ... # doctest:+NORMALIZE_WHITESPACE
  Please provide a command
-  shell     Runs a Python shell inside Tango application context.
-  serve     Run a Tango site on the local machine, for development.
-  version   Display this version of Tango.
-  shelve    Shelve an application's stash, as a worker process.
+   shell    Runs a Python shell inside Tango application context.
+   get      Create shelf.dat
+   drop     Drop the specified site or site/rule from the shelf.
+   serve    Run a Tango site on the local machine, for development.
+   version  Display this version of Tango.
+   show     Display the contents of the shelf.
+   shelve   Shelve an application's stash, as a worker process.
+   put      Load a shelf.dat file onto the shelf.
 >>>
 
 
@@ -156,6 +160,43 @@ Loading simplest ... done.
 Stashing simplest / ... done.
 >>>
 
+
+Command line: ``tango show simplest``
+
+>>> call('show simplest')
+simplest /
+>>>
+
+Command line: ``tango show simplest /``
+
+>>> call('show simplest /')
+simplest /
+>>>
+
+Command line: ``tango get simplest``
+
+>>> call('get simplest')
+shelf.dat created.
+>>>
+
+Command line: ``tango drop simplest``
+
+>>> call('drop simplest')
+dropped simplest
+>>> call('show simplest')
+>>> call('shelve simplest') 
+Loading simplest ... done.
+Stashing simplest / ... done.
+>>>
+
+Command line: ``tango drop simplest``
+>>> call('drop simplest /')
+dropped simplest /
+>>> call('show simplest')
+>>> call('shelve simplest') 
+Loading simplest ... done.
+Stashing simplest / ... done.
+>>>
 
 Command line: ``tango shell --no-ipython simplesite``
 
@@ -277,3 +318,4 @@ Verify call from OS shell.
 >>> os.system('tango version >/dev/null 2>&1')
 0
 >>>
+
