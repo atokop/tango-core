@@ -1,6 +1,5 @@
 "Default configuration for new Tango instances."
 
-import os
 from getpass import getuser
 
 from tango.http import Request, Response
@@ -16,11 +15,7 @@ SHELF_CONNECTOR_CLASS = SqliteConnector
 # Note that getuser reads environment variables and can be easily spoofed.
 SHELF_SQLITE_FILEPATH = '/tmp/tango-%(user)s.db' % {'user': getuser()}
 
-SHELVE_TIME_PATH = os.path.abspath(
-    os.path.join(
-        os.path.abspath(os.path.dirname(__file__)),
-        '..', '.shelve_time'))
-
+SHELVE_TIME_BASE = '/tmp/.shelve_time'
 
 ## Request/response defaults.
 # Select request & response classes, for use in writers & in Flask handlers.

@@ -151,8 +151,7 @@ Command line: ``tango shelve -m testsite``
 
 Command line: ``tango shelve -m testsite`` with no .shelve_time file
 
->>> from tango.config import SHELVE_TIME_PATH
->>> os.remove(SHELVE_TIME_PATH)
+>>> os.remove(os.environ['SHELVE_TIME_PATH'])
 >>> call('shelve -m testsite')
 Loading testsite.stash ... done.
 Loading testsite.stash.blankexport ... done.

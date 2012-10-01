@@ -1,11 +1,11 @@
 "Marshal template contexts exported declaratively by Tango stash modules."
 
 import os
+
 import warnings
 
 import yaml
 
-from tango.config import SHELVE_TIME_PATH
 from tango.errors import DuplicateContextWarning, DuplicateExportWarning
 from tango.errors import DuplicateRouteWarning, HeaderException
 from tango.errors import ModuleNotFound
@@ -82,7 +82,7 @@ def build_module_routes(module_or_name, modified_only=False, import_stash=False,
 
     if modified_only:
         try:
-            last_modified_time = os.path.getmtime(SHELVE_TIME_PATH)
+            last_modified_time = os.path.getmtime(os.environ['SHELVE_TIME_PATH'])
         except (IOError, OSError):
             last_modified_time = 0
 
