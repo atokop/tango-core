@@ -10,6 +10,7 @@ from flask.ext.script import Server as BaseServer
 from flask.ext.script import Shell as BaseShell
 
 from tango.app import Tango
+from tango.config import SHELVE_TIME_BASE
 from tango.factory.app import get_app
 from tango.factory.snapshot import build_snapshot
 from tango.imports import module_exists, fix_import_name_if_pyfile
@@ -74,11 +75,14 @@ def snapshot(site):
 
 
 @command
-def shelve(site):
+def shelve(site, modified_only=False):
     "Shelve an application's stash, as a worker process."
     with no_pyc():
+        os.environ['SHELVE_TIME_PATH'] = SHELVE_TIME_BASE + '.' + site
         site = validate_site(site)
-        tango.factory.stash.shelve(site, logfile=sys.stdout)
+        tango.factory.stash.shelve(site, modified_only=modified_only, logfile=sys.stdout)
+        open(os.environ['SHELVE_TIME_PATH'], 'w').close()
+
 
 
 class Manager(BaseManager):

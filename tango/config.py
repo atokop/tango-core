@@ -8,6 +8,8 @@ from tango.writers import TextWriter
 SHELF_CONNECTOR_CLASS = SqliteConnector
 SQLITE_FILEPATH = '/tmp/tango.db'
 
+SHELVE_TIME_BASE = '/tmp/.shelve_time'
+
 # Response defaults.
 # It might be tempting to use a default writer class and not instance.
 # But the writer is a callable not a data structure.

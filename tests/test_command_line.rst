@@ -210,6 +210,44 @@ Stashing test /route1.txt ... done.
 Stashing test /route2.txt ... done.
 >>>
 
+Command line: ``tango shelve -m testsite``
+
+>>> call('shelve -m testsite')
+>>>
+
+Command line: ``tango shelve -m testsite`` with no .shelve_time file
+
+>>> os.remove(os.environ['SHELVE_TIME_PATH'])
+>>> call('shelve -m testsite')
+Loading testsite.stash ... done.
+Loading testsite.stash.blankexport ... done.
+Loading testsite.stash.index ... done.
+Loading testsite.stash.multiple ... done.
+Loading testsite.stash.noexports ... done.
+Loading testsite.stash.package.module ... done.
+Loading testsite.stash.view_arg ... done.
+Stashing test / ... done.
+Stashing test /argument/<argument>/ ... done.
+Stashing test /blank/export.txt ... done.
+Stashing test /index.json ... done.
+Stashing test /plain/exports.txt ... done.
+Stashing test /route1.txt ... done.
+Stashing test /route2.txt ... done.
+>>>
+
+Command line: ``tango shelve -m testsite`` with one file updated
+(sleeping for 1 second so time between last shelve and file modification is
+ different)
+
+>>> os.system('sleep 1')
+0
+>>> os.system('touch tests/testsite/stash/index.py')
+0
+>>> call('shelve -m testsite')
+Loading testsite.stash.index ... done.
+Stashing test / ... done.
+>>>
+
 
 Command line: ``tango shelve simplest``
 

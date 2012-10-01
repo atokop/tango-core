@@ -4,7 +4,7 @@ from tango.app import Tango
 from tango.factory.app import build_app
 
 
-def shelve(app_or_name, logfile=None):
+def shelve(app_or_name, modified_only=False, logfile=None):
     """Shelve the route contexts of an app, given by object or import name.
 
     Does not return anything, and inherently has side-effects:
@@ -14,7 +14,7 @@ def shelve(app_or_name, logfile=None):
     if isinstance(app_or_name, Tango):
         app = app_or_name
     else:
-        app = build_app(app_or_name, import_stash=True, use_snapshot=False,
+        app = build_app(app_or_name, modified_only=modified_only, import_stash=True, use_snapshot=False,
                         logfile=logfile)
     for route in app.routes:
         site, rule, context = route.site, route.rule, route.context

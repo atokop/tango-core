@@ -3,6 +3,7 @@
 \#*
 /build/
 .coverage
+.shelve_time
 *.dat
 *.dat.maxid
 *.db
