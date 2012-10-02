@@ -95,7 +95,7 @@ class Tango(Flask):
                 logfile.write('done.\n')
 
     @classmethod
-    def shelve_by_name(cls, name, logfile=None):
+    def shelve_by_name(cls, name, modified_only=False, logfile=None):
         """Shelve the route contexts of an app matching import name.
 
         Does not return anything, and inherently has side-effects:
@@ -103,7 +103,7 @@ class Tango(Flask):
         <tango.app.Tango object at 0x...>
         >>>
         """
-        app = cls.build_app(name, import_stash=True, logfile=logfile)
+        app = cls.build_app(name, import_stash=True, modified_only=modified_only, logfile=logfile)
         app.shelve(logfile=logfile)
         return app
 
@@ -170,7 +170,7 @@ class Tango(Flask):
         return cls.build_app(import_name, **options)
 
     @classmethod
-    def build_app(cls, import_name, import_stash=False, logfile=None):
+    def build_app(cls, import_name, modified_only=False, import_stash=False, logfile=None):
         """Create a Tango application object from a Python import name.
 
         This function accepts three kinds of import names:
@@ -270,6 +270,7 @@ class Tango(Flask):
 
             build_options = {'import_stash': import_stash}
             build_options['logfile'] = logfile
+            build_options['modified_only'] = modified_only
             if module_exists(import_name + '.stash'):
                 module = __import__(import_name, fromlist=['stash']).stash
                 app.routes = build_module_routes(module, **build_options)

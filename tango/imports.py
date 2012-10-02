@@ -192,6 +192,12 @@ def discover_modules(module_or_name):
             yield name
 
 
+def discover_modified_modules(module_or_name, last_modified_time=0):
+    for module in discover_modules(module_or_name):
+        if os.path.getmtime(get_module_filepath(module)) > last_modified_time:
+            yield module
+
+
 def module_exists(name):
     """Return True if a module by the given name exists, or False if not.
 

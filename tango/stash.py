@@ -5,10 +5,11 @@ import warnings
 
 import yaml
 
+from tango.config import SHELVE_TIME_PATH
 from tango.errors import DuplicateContextWarning, DuplicateExportWarning
 from tango.errors import DuplicateRouteWarning, HeaderException
 from tango.errors import ModuleNotFound
-from tango.imports import discover_modules, get_module
+from tango.imports import discover_modified_modules, discover_modules, get_module
 from tango.imports import get_module_filepath, get_module_docstring
 from tango.imports import fix_import_name_if_pyfile
 
@@ -57,7 +58,7 @@ class Route(object):
             return pattern.format(self.rule, ', {0}'.format(self.writer_name))
 
 
-def build_module_routes(module_or_name, import_stash=False, logfile=None):
+def build_module_routes(module_or_name, modified_only=False, import_stash=False, logfile=None):
     """Discover modules & parse headers from a Tango stash import name.
 
     Returns list of Route objects with attributes via structured docstrings.
@@ -79,7 +80,19 @@ def build_module_routes(module_or_name, import_stash=False, logfile=None):
     """
     route_collection = []
 
-    for name in discover_modules(module_or_name):
+    if modified_only:
+        try:
+            last_modified_time = os.path.getmtime(SHELVE_TIME_PATH)
+        except (IOError, OSError):
+            last_modified_time = 0
+
+        modules = discover_modified_modules(module_or_name, last_modified_time)
+    else:
+        modules = discover_modules(module_or_name)
+
+
+
+    for name in modules:
         module_routes = parse_header(name)
         if not module_routes:
             continue
