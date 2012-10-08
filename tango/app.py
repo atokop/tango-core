@@ -1,4 +1,5 @@
 "Core Tango classes for creating applications from Tango sites."
+import os
 
 from flask import Flask, request, _request_ctx_stack
 from jinja2 import Environment, PackageLoader, TemplateNotFound
@@ -10,7 +11,7 @@ from tango.imports import module_is_package
 from tango.writers import TemplateWriter, TextWriter, JsonWriter
 
 
-__all__ = ['Tango', 'request', 'Proxy']
+__all__ = ['Tango', 'config', 'request', 'Proxy']
 
 
 class Tango(Flask):
@@ -177,3 +178,10 @@ class TemplateLoader(PackageLoader):
         except TemplateNotFound:
             template = 'default/' + template
             return PackageLoader.get_source(self, environment, template)
+
+
+# Doing this at the bottom so Tango object already exists when we try to
+# import get_app
+from tango.factory.app import get_app
+
+config = Proxy(lambda: get_app(os.environ['TANGO_APP_NAME']).config)
