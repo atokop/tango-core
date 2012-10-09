@@ -1,6 +1,4 @@
 "Package to instantiate a Tango object from a Tango stash module."
-import os
-
 from flask import request
 from werkzeug import create_environ
 
@@ -137,8 +135,6 @@ def build_app(import_name, modified_only=False, import_stash=False, use_snapshot
     >>>
     """
     import_name = fix_import_name_if_pyfile(import_name)
-
-    os.environ['TANGO_APP_NAME'] = import_name
 
     # Initialize application. See docstring above for construction logic.
     app = None
