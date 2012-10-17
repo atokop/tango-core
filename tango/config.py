@@ -15,7 +15,8 @@ SHELF_CONNECTOR_CLASS = SqliteConnector
 # Note that getuser reads environment variables and can be easily spoofed.
 SHELF_SQLITE_FILEPATH = '/tmp/tango-%(user)s.db' % {'user': getuser()}
 
-SHELVE_TIME_BASE = '/tmp/.shelve_time'
+# Directory where last shelve time is stored. 
+SHELVE_TIME_DIR = '/tmp/shelve_time/'
 
 ## Request/response defaults.
 # Select request & response classes, for use in writers & in Flask handlers.
