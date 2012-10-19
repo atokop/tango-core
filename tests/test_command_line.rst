@@ -200,13 +200,29 @@ Stashing simplest / ... done.
 Command line: ``tango show simplest``
 
 >>> call('show simplest')
-simplest /
+Fetching simplest from shelf ... done.
+Matches simplest /
 >>>
 
 Command line: ``tango show simplest /``
 
 >>> call('show simplest /')
-simplest /
+Fetching simplest / from shelf ... done.
+Matches simplest /
+>>>
+
+Command line: ``tango show -c simplest``
+
+>>> call('show -c simplest')
+Fetching simplest from shelf ... done.
+Matches simplest / with context {'variable': 'set me in Python', 'description': 'A tango site in just one module.'}
+>>>
+
+Command line: ``tango show -c simplest /``
+
+>>> call('show -c simplest /')
+Fetching simplest / from shelf ... done.
+Matches simplest / with context {'variable': 'set me in Python', 'description': 'A tango site in just one module.'}
 >>>
 
 Command line: ``tango get simplest``
@@ -220,6 +236,7 @@ Command line: ``tango drop simplest``
 >>> call('drop simplest')
 dropped simplest
 >>> call('show simplest')
+Fetching simplest from shelf ... done.
 >>> call('shelve simplest') 
 Loading simplest ... done.
 Stashing simplest / ... done.
@@ -229,6 +246,7 @@ Command line: ``tango drop simplest``
 >>> call('drop simplest /')
 dropped simplest /
 >>> call('show simplest')
+Fetching simplest from shelf ... done.
 >>> call('shelve simplest') 
 Loading simplest ... done.
 Stashing simplest / ... done.

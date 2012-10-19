@@ -88,9 +88,10 @@ class Tango(Flask):
         """
         for route in self.routes:
             site, rule, context = route.site, route.rule, route.context
+            source_files = route.source_files
             if logfile is not None:
                 logfile.write('Stashing {0} {1} ... '.format(site, rule))
-            self.shelf.put(site, rule, context)
+            self.shelf.put(site, rule, context, source_files)
             if logfile is not None:
                 logfile.write('done.\n')
 

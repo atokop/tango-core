@@ -70,3 +70,9 @@ class ConnectorCommonTests(object):
         self.connector.put('other', 'a', {})
         self.assertEqual(self.connector.list('other', 'a'), [('other', 'a')])
         self.assertEqual(self.connector.list('site'), site_results)
+
+    def test_items_source(self):
+        self.assertEqual(self.connector.source('site', 'one'), [])
+
+        self.connector.put('site', 'one', {}, ['source.py'])
+        self.assertEqual(self.connector.source('site', 'one'), ['source.py'])

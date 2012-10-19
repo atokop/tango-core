@@ -40,7 +40,7 @@ class Route(object):
     modules = None
 
     def __init__(self, site, rule, exports, static=None, writer_name=None,
-                 context=None, modules=None):
+                 context=None, modules=None, source_files=None):
         self.site = site
         self.rule = rule
         self.exports = exports
@@ -49,6 +49,7 @@ class Route(object):
 
         self.context = context
         self.modules = modules
+        self.source_files = source_files
 
     def __repr__(self):
         pattern = u'<Route: {0}{1}>'
@@ -127,6 +128,7 @@ def build_module_routes(module_or_name, modified_only=False, import_stash=False,
             route_context.update(new_route_context)
             route.context = route_context
             route.modules += route_table[route.rule].modules
+            route.source_files += route_table[route.rule].source_files
 
         route_table[route.rule] = route
     return sorted(route_table.values(), key=lambda route: route.rule)
@@ -378,6 +380,7 @@ def parse_header(import_name):
             warnings.warn(msg, DuplicateRouteWarning)
         route_obj = Route(site, route, exports, static, template)
         route_obj.modules = [import_name]
+        route_obj.source_files = [filepath]
         route_table[route] = route_obj
 
     return sorted(route_table.values(), key=lambda route: route.rule)

@@ -118,6 +118,7 @@ class Get(Command):
                         "differs from the site name."),
         )
 
+
 class Put(Command):
     """Load a shelf.dat file onto the shelf.
     """
@@ -147,11 +148,20 @@ class Show(Command):
     def run(self, site, rule, module, show_context):
         app = get_app(site, module)
 
-        for site, rule in app.shelf.list(site, rule):
-            print site, rule,
+        print "Fetching {0}".format(site),
+        if rule:
+            print rule,
+        print "from shelf ...",
+
+        shelf_list = app.shelf.list(site, rule)
+
+        print "done."
+
+        for site, rule in shelf_list:
+            print "Matches {0} {1}".format(site, rule),
             if show_context:
                 context = app.shelf.get(site, rule)
-                print context,
+                print "with context {0}".format(context),
             print
 
     def get_options(self):
