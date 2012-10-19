@@ -205,6 +205,36 @@ class Drop(Command):
         )
 
 
+class Source(Command):
+    def run(self, site, rule, module, data_only):
+        app = get_app(site, module)
+
+        if not data_only:
+            print "Fetching source files for {0} {1} ...".format(site, rule),
+
+        source_files = app.shelf.source(site, rule)
+
+        if not data_only:
+            print "done."
+
+        for filepath in source_files:
+            if not data_only:
+                print "Comes from",
+            print filepath
+
+    def get_options(self):
+        return(
+            Option('site', default=None),
+            Option('rule', default=None),
+            Option('-m', '--module', dest="module", default=None,
+                   help="Provide a module name if the module name differs from"
+                        " the site name."),
+            Option('--data', dest="data_only", action="store_true",
+                   help=argparse.SUPPRESS),
+        )
+
+
+
 class Manager(BaseManager):
     def handle(self, prog, *args, **kwargs):
         # Chop off full path to program name in argument parsing.
@@ -250,6 +280,7 @@ def run():
     manager.add_command('get', Get())
     manager.add_command('put', Put())
     manager.add_command('drop', Drop())
+    manager.add_command('source', Source())
     for cmd in commands:
         manager.command(cmd)
     manager.run()
