@@ -4,6 +4,7 @@ from contextlib import contextmanager
 import cPickle as pickle
 import os
 import sys
+import argparse
 
 from flask.ext.script import Command, Option
 from flask.ext.script import Manager as BaseManager
@@ -145,33 +146,42 @@ class Put(Command):
 class Show(Command):
     """Display the contents of the shelf.
     """
-    def run(self, site, rule, module, show_context):
+    def run(self, site, rule, module, show_context, data_only):
         app = get_app(site, module)
 
-        print "Fetching {0}".format(site),
-        if rule:
-            print rule,
-        print "from shelf ...",
+        if not data_only:
+            print "Fetching {0}".format(site),
+            if rule:
+                print rule,
+            print "from shelf ...",
 
         shelf_list = app.shelf.list(site, rule)
 
-        print "done."
+        if not data_only:
+            print "done."
 
         for site, rule in shelf_list:
-            print "Matches {0} {1}".format(site, rule),
+            if not data_only:
+                print "Matches ",
+            print "{0} {1}".format(site, rule),
             if show_context:
                 context = app.shelf.get(site, rule)
-                print "with context {0}".format(context),
+                if not data_only:
+                    print "with context ",
+                print context,
             print
 
     def get_options(self):
         return(
             Option('site', default=None),
             Option('rule', nargs='?', default=None),
-            Option('-c', '--context', action='store_true', dest="show_context"),
+            Option('-c', '--context', action='store_true',
+                   dest="show_context"),
             Option('-m', '--module', dest="module", default=None,
                    help="Provide a module name if the module name differs from"
                         " the site name."),
+            Option('--data', dest="data_only", action="store_true",
+                   help=argparse.SUPPRESS),
         )
 
 class Drop(Command):
@@ -193,6 +203,7 @@ class Drop(Command):
                    help="Provide a module name if the module name differs from"
                         " the site name."),
         )
+
 
 class Manager(BaseManager):
     def handle(self, prog, *args, **kwargs):
