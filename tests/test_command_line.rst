@@ -44,6 +44,7 @@ Command line: ``tango``
    get      Create shelf.dat
    drop     Drop the specified site or site/rule from the shelf.
    serve    Run a Tango site on the local machine, for development.
+   source   Display the file or files where a shelf entry originated.
    version  Display this version of Tango.
    show     Display the contents of the shelf.
    shelve   Shelve an application's stash, as a worker process.
@@ -211,24 +212,55 @@ Fetching simplest / from shelf ... done.
 Matches simplest /
 >>>
 
-Command line: ``tango show -c simplest``
+Command line: ``tango show test --module testsite``
+
+>>> call('show test -m testsite')
+Fetching test from shelf ... done.
+Matches test /
+Matches test /argument/<argument>/
+Matches test /blank/export.txt
+Matches test /index.json
+Matches test /plain/exports.txt
+Matches test /route1.txt
+Matches test /route2.txt
+>>>
+
+Command line: ``tango show test --module failsite``
+>>> call('show test -m failsite')
+Cannot locate site: 'test'.
+>>>
+
+Command line: ``tango show --context simplest``
 
 >>> call('show -c simplest')
 Fetching simplest from shelf ... done.
 Matches simplest / with context {'variable': 'set me in Python', 'description': 'A tango site in just one module.'}
 >>>
 
-Command line: ``tango show -c simplest /``
+Command line: ``tango show --context simplest /``
 
 >>> call('show -c simplest /')
 Fetching simplest / from shelf ... done.
 Matches simplest / with context {'variable': 'set me in Python', 'description': 'A tango site in just one module.'}
 >>>
 
+Command line: ``tango source simplest /``
+
+>>> call('source simplest /') # doctest:+ELLIPSIS
+Fetching source files for simplest / ... done.
+Comes from .../tests/simplest.py
+>>>
+
 Command line: ``tango get simplest``
 
 >>> call('get simplest')
 shelf.dat created.
+>>>
+
+
+Command line: ``tango put shelf.dat``
+
+>>> call('put shelf.dat')
 >>>
 
 Command line: ``tango drop simplest``

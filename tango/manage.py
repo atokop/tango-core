@@ -22,16 +22,9 @@ commands = []
 
 def get_app(site, module=None):
     try:
-        if module:
-            app = Tango.get_app(module)
-        else:
-            app = Tango.get_app(site)
-
+        return Tango.get_app(module or site)
     except ModuleNotFound:
         print "Cannot locate site: '{0}'.".format(site)
-        sys.exit(1)
-
-    return app
 
 
 def validate_site(site):
@@ -94,6 +87,8 @@ class Get(Command):
     def run(self, site, rule, module):
         app = get_app(site, module)
 
+        if not app: return
+
         data =  {
             'tango_version': tango.__version__,
             'site': site,
@@ -135,6 +130,8 @@ class Put(Command):
 
             app = get_app(site, module)
 
+            if not app: return
+
             for item in entries:
                 rule = item['rule']
                 context = item['context']
@@ -149,6 +146,8 @@ class Show(Command):
     def run(self, site, rule, module, show_context, data_only):
         app = get_app(site, module)
 
+        if not app: return
+
         if not data_only:
             print "Fetching {0}".format(site),
             if rule:
@@ -162,12 +161,12 @@ class Show(Command):
 
         for site, rule in shelf_list:
             if not data_only:
-                print "Matches ",
+                print "Matches",
             print "{0} {1}".format(site, rule),
             if show_context:
                 context = app.shelf.get(site, rule)
                 if not data_only:
-                    print "with context ",
+                    print "with context",
                 print context,
             print
 
@@ -190,6 +189,8 @@ class Drop(Command):
     def run(self, site, rule, module):
         app = get_app(site, module)
 
+        if not app: return
+
         app.shelf.drop(site, rule)
         print 'dropped', site,
         if rule:
@@ -206,8 +207,12 @@ class Drop(Command):
 
 
 class Source(Command):
+    """Display the file or files where a shelf entry originated.
+    """
     def run(self, site, rule, module, data_only):
         app = get_app(site, module)
+
+        if not app: return
 
         if not data_only:
             print "Fetching source files for {0} {1} ...".format(site, rule),
@@ -251,6 +256,8 @@ class Server(BaseServer):
     def handle(self, _, site, host, port, use_debugger, use_reloader):
         site = validate_site(site)
         app = Tango.get_app(site)
+
+        if not app: return
         app.run(host=host, port=port, debug=use_debugger,
                 use_debugger=use_debugger, use_reloader=use_reloader,
                 **self.server_options)
@@ -266,6 +273,9 @@ class Shell(BaseShell):
         with no_pyc():
             site = validate_site(site)
             app = Tango.get_app(site)
+
+            if not app: return
+
             Command.handle(self, app, *args, **kwargs)
 
 

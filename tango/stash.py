@@ -188,6 +188,15 @@ def pull_context(route_objs):
 
 
 def parse_header_of_filepath(filepath):
+    """Parse docstring of a module given its filepath.
+
+    Resolves import name of filepath and calls parse_header.
+
+    Examples:
+    >>> parse_header_of_filepath('simplest.py')
+    [<Route: />]
+    >>>
+    """
     try:
         filepath = os.path.abspath(filepath)
 
