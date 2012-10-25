@@ -303,7 +303,7 @@ def parse_header(import_name):
 
     try:
         header = yaml.load(doc)
-    except yaml.scanner.ScannerError:
+    except (yaml.scanner.ScannerError, yaml.parser.ParserError):
         raise HeaderException('metadata docstring must be yaml or doc, '
                               'but not both.')
 
