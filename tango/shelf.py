@@ -130,11 +130,13 @@ class SqliteConnector(BaseConnector):
 
                 db.commit()
 
-    def list(self, site, rule=None):
+    def list(self, site=None, rule=None):
+        if site is None:
+            site = '%'
         if rule is None:
             rule = '%'
         with self.connection() as db:
             cursor = db.execute('SELECT site, rule FROM contexts '
-                                'WHERE site = ? AND rule LIKE ?;',
+                                'WHERE site LIKE ? AND rule LIKE ?;',
                                 (site, rule))
             return cursor.fetchall()
