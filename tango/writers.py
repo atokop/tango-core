@@ -59,6 +59,7 @@ class BaseWriter(object):
         if self.mimetype is not None:
             # Set default_mimetype to allow write method to set mimetype attr.
             response.default_mimetype = self.mimetype
+            response.mimetype = self.mimetype
         return response
 
     def write(self, request, context):
@@ -79,7 +80,7 @@ class TextWriter(BaseWriter):
      'lambda': <function <lambda> at 0x...>,
      'adict': {'second': 2, 'first': 1}, 'title': 'Test Title'}
     >>>
-   """
+    """
 
     mimetype = 'text/plain'
 
@@ -101,6 +102,8 @@ class JsonWriter(BaseWriter):
     >>> response = json(None, test_context)
     >>> type(response)
     <class 'tango.http.Response'>
+    >>> response.mimetype
+    'application/json'
     >>> print response.data # doctest:+NORMALIZE_WHITESPACE
     {"answer": 42, "count": ["one", "two"],
      "adict": {"second": 2, "first": 1}, "title": "Test Title"}
