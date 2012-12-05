@@ -60,6 +60,7 @@ class BaseWriter(object):
             # Set default_mimetype to allow write method to set mimetype attr.
             response.default_mimetype = self.mimetype
             response.mimetype = self.mimetype
+            response.content_type = self.mimetype
         return response
 
     def write(self, request, context):
