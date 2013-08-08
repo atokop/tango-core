@@ -161,27 +161,27 @@ def build_app(import_name, modified_only=False, import_stash=False, use_snapshot
         if module_is_package(import_name):
             tango.filters.init_app(app)
 
-        # Build application routes, checking for a snapshot first.
-        routes = None
-        if use_snapshot:
-            routes = get_snapshot(import_name)
+    # Build application routes, checking for a snapshot first.
+    routes = None
+    if use_snapshot:
+        routes = get_snapshot(import_name)
 
-        if routes is None:
-            build_options = {'import_stash': import_stash}
-            build_options['logfile'] = logfile
-            build_options['modified_only'] = modified_only
-            if module_exists(import_name + '.stash'):
-                module = __import__(import_name, fromlist=['stash']).stash
-                routes = build_module_routes(module, **build_options)
-            else:
-                routes = build_module_routes(import_name, **build_options)
+    if routes is None:
+        build_options = {'import_stash': import_stash}
+        build_options['logfile'] = logfile
+        build_options['modified_only'] = modified_only
+        if module_exists(import_name + '.stash'):
+            module = __import__(import_name, fromlist=['stash']).stash
+            routes = build_module_routes(module, **build_options)
         else:
-            print 'Using snapshot with stashed routes.'
-        app.routes = routes
+            routes = build_module_routes(import_name, **build_options)
+    else:
+        print 'Using snapshot with stashed routes.'
+    app.routes = routes
 
-        # Stitch together context, template, and path.
-        for route in app.routes:
-            app.build_view(route)
+    # Stitch together context, template, and path.
+    for route in app.routes:
+        app.build_view(route)
 
     @app.context_processor
     def process_view_args():
